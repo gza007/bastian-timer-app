@@ -1,15 +1,13 @@
 import './App.css';
+import Timer from './timer.js';
+import { Fragment } from 'react';
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Let's Go Champ
-        </p>
-      </header>
-    </div>
-  );
+  <Fragment>
+    <Timer />
+  </Fragment>
+  )
 }
 
 export default App;
