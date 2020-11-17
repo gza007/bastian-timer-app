@@ -12,6 +12,8 @@ class Timer extends React.Component {
       this.stopTimer = this.stopTimer.bind(this)
       this.resetTimer = this.resetTimer.bind(this)
     }
+    
+    
     startTimer() {
       this.setState({
         isOn: true,
@@ -42,9 +44,19 @@ class Timer extends React.Component {
       let reset = (this.state.time === 0 || this.state.isOn) ?
         null :
         <button onClick={this.resetTimer}>reset</button>
+
+        const Display = () => {
+            let ms = this.state.time;
+            ms = 1000*Math.round(ms/1000);
+            var d = new Date(ms);
+            return (
+                ( ('0'+d.getUTCMinutes()).slice(-2) + ':' + ('0'+d.getUTCSeconds()).slice(-2) )
+                )
+            }   
+        
       return(
         <div>
-          <h3>timer: {this.state.time}</h3>
+          <h3>timer: {Display()}</h3>
           {start}
           {resume}
           {stop}
