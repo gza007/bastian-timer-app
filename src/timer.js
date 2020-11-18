@@ -4,54 +4,66 @@ class Timer extends React.Component {
     constructor(props){
       super(props)
       this.state = {
-        time: 60000,
         isOn: false,
-        start: 0
+        startTime: 0,
+        overallTime: 50000,
+        timeLeft: 0,
       }
       this.startTimer = this.startTimer.bind(this)
       this.stopTimer = this.stopTimer.bind(this)
       this.resetTimer = this.resetTimer.bind(this)
     }
-    
+     
     
     startTimer() {
       this.setState({
         isOn: true,
-        time: this.state.time,
-        start: this.state.time - Date.now()
+        startTime: Date.now()
       })
-      this.timer = setInterval(() => this.setState({
-        time: this.state.start - Date.now()
-      }), 1);
+      this.timer = setInterval(() => this.run(), 10);
     }
+
+    run() {
+      const diff = Date.now() - this.state.startTime;
+      let remaining = this.state.overallTime - diff;
+      if (remaining < 0) {
+        remaining = 0;
+      }
+      this.setState(() => ({
+        timeLeft: remaining
+      }));
+      if (remaining === 0) {
+        clearInterval(this.timer)
+      }
+    }
+
     stopTimer() {
       this.setState({isOn: false})
       clearInterval(this.timer)
     }
     resetTimer() {
-      this.setState({time: 0, isOn: false})
+      this.setState({startTime: 0, isOn: false})
       clearInterval(this.timer)
     }
 
-    // handleSubmit(event) {
-    //   this.setState({title: event.target.value})
-    // }
+    handleSubmit = (event) => {
+      this.setState({startTime: event.target.value})
+      console.log(event.target.value)
+    }
 
     render() { 
       const Display = () => {
-        let ms = this.state.time;
+        let ms = this.state.timeLeft ;
         ms = 1000*Math.round(ms/1000);
         var d = new Date(ms);
         return (
           ( ('0'+d.getUTCMinutes()).slice(-2) + ':' + ('0'+d.getUTCSeconds()).slice(-2) )
           )
         }   
-        
-        console.log(Date.now())
 
         return(
         <div>
-          <form onSubmit={this.handleSubmit}>
+          <form onChange={this.handleSubmit}>
             <input type="number"/>
           </form>
           <h3>{Display()}</h3>
