@@ -4,7 +4,7 @@ class Timer extends React.Component {
     constructor(props){
       super(props)
       this.state = {
-        time: 0,
+        time: 60000,
         isOn: false,
         start: 0
       }
@@ -18,10 +18,10 @@ class Timer extends React.Component {
       this.setState({
         isOn: true,
         time: this.state.time,
-        start: Date.now() - this.state.time
+        start: this.state.time - Date.now()
       })
       this.timer = setInterval(() => this.setState({
-        time: Date.now() - this.state.start
+        time: this.state.start - Date.now()
       }), 1);
     }
     stopTimer() {
@@ -32,9 +32,12 @@ class Timer extends React.Component {
       this.setState({time: 0, isOn: false})
       clearInterval(this.timer)
     }
-    render() {
-      
-      
+
+    // handleSubmit(event) {
+    //   this.setState({title: event.target.value})
+    // }
+
+    render() { 
       const Display = () => {
         let ms = this.state.time;
         ms = 1000*Math.round(ms/1000);
@@ -44,8 +47,13 @@ class Timer extends React.Component {
           )
         }   
         
+        console.log(Date.now())
+
         return(
         <div>
+          <form onSubmit={this.handleSubmit}>
+            <input type="number"/>
+          </form>
           <h3>{Display()}</h3>
             <button onClick={this.startTimer}>start</button> 
             <button onClick={this.stopTimer}>stop</button>
