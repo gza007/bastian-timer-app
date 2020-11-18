@@ -20,7 +20,7 @@ class Timer extends React.Component {
         isOn: true,
         startTime: Date.now()
       })
-      this.timer = setInterval(() => this.run(), 10);
+      this.timer = setInterval(() => this.run(), 1);
     }
 
     run() {
@@ -53,7 +53,7 @@ class Timer extends React.Component {
 
     render() { 
       const Display = () => {
-        let ms = this.state.timeLeft ;
+        let ms = this.state.timeLeft;
         ms = 1000*Math.round(ms/1000);
         var d = new Date(ms);
         return (
