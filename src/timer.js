@@ -4,16 +4,17 @@ class Timer extends React.Component {
     constructor(props){
       super(props)
       this.state = {
+        minutes: 0,
+        seconds: 0,
         isOn: false,
         startTime: 0,
-        overallTime: 50000,
+        overallTime: 0,
         timeLeft: 0,
       }
       this.startTimer = this.startTimer.bind(this)
       this.stopTimer = this.stopTimer.bind(this)
       this.resetTimer = this.resetTimer.bind(this)
     }
-     
     
     startTimer() {
       this.setState({
@@ -23,8 +24,16 @@ class Timer extends React.Component {
       this.timer = setInterval(() => this.run(), 1);
     }
 
+    convert() {
+      let milliseconds = this.state.minutes*60*1000 + this.state.seconds*1000;
+      this.setState({
+        overallTime: milliseconds
+      })
+    }
+
     run() {
       const diff = Date.now() - this.state.startTime;
+      this.convert();
       let remaining = this.state.overallTime - diff;
       if (remaining < 0) {
         remaining = 0;
@@ -42,15 +51,16 @@ class Timer extends React.Component {
       clearInterval(this.timer)
     }
     resetTimer() {
-      this.setState({startTime: 0, isOn: false})
+      this.setState({timeLeft: this.state.overallTime, isOn: false})
       clearInterval(this.timer)
     }
 
-    handleSubmit = (event) => {
-      this.setState({startTime: event.target.value})
-      console.log(event.target.value)
+    inputHandler = (event) => {
+      this.setState({[event.target.name]: event.target.value});
+      console.log('handlesubmit', this.state.minutes, this.state.seconds)
     }
-
+  
+    
     render() { 
       const Display = () => {
         let ms = this.state.timeLeft;
@@ -63,10 +73,11 @@ class Timer extends React.Component {
 
         return(
         <div>
-          <form onChange={this.handleSubmit}>
-            <input type="number"/>
-          </form>
-          <h3>{Display()}</h3>
+            <h3>Minutes</h3>
+            <input type="number"  placeholder="00"   name="minutes"  onChange={this.inputHandler} />
+            <h3>Seconds</h3>
+            <input type="number"  placeholder="00"  name="seconds"  onChange={this.inputHandler} />
+          <h2>TIME LEFT:</h2><h3>{Display()}</h3>  
             <button onClick={this.startTimer}>start</button> 
             <button onClick={this.stopTimer}>stop</button>
             <button onClick={this.resetTimer}>reset</button>
