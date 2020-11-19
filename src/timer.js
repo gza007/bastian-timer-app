@@ -17,12 +17,14 @@ class Timer extends React.Component {
     }
     
     startTimer() {
+      if (!this.state.isOn) {
       this.setState({
         isOn: true,
         startTime: Date.now()
       })
       this.timer = setInterval(() => this.run(), 1);
     }
+  }
 
     convert() {
       let milliseconds = this.state.minutes*60*1000 + this.state.seconds*1000;
