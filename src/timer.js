@@ -6,6 +6,7 @@ class Timer extends React.Component {
       this.state = {
         minutes: 0,
         seconds: 0,
+        rounds: 1,
         isOn: false,
         startTime: 0,
         overallTime: 0,
@@ -79,6 +80,8 @@ class Timer extends React.Component {
             <input type="number"  placeholder="00"   name="minutes"  onChange={this.inputHandler} />
             <h3>Seconds</h3>
             <input type="number"  placeholder="00"  name="seconds"  onChange={this.inputHandler} />
+            <h3>Rounds</h3>
+            <input type="number"  placeholder="00"  name="rounds"  onChange={this.inputHandler} />
           <h2>TIME LEFT:</h2><h3>{Display()}</h3>  
             <button onClick={this.startTimer}>start</button> 
             <button onClick={this.stopTimer}>stop</button>
