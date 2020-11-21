@@ -6,7 +6,7 @@ class Timer extends React.Component {
       this.state = {
         minutes: 0,
         seconds: 0,
-        rounds: 1,
+        rounds: 0,
         isOn: false,
         startTime: 0,
         overallTime: 0,
@@ -24,6 +24,7 @@ class Timer extends React.Component {
         startTime: Date.now()
       })
       this.timer = setInterval(() => this.run(), 1);
+      console.log(this.state.rounds)
     }
   }
 
@@ -33,6 +34,7 @@ class Timer extends React.Component {
         overallTime: milliseconds
       })
     }
+    
 
     run() {
       const diff = Date.now() - this.state.startTime;
@@ -42,12 +44,15 @@ class Timer extends React.Component {
         remaining = 0;
       }
       this.setState(() => ({
-        timeLeft: remaining
+        timeLeft: remaining, 
       }));
       if (remaining === 0) {
         clearInterval(this.timer)
       }
     }
+
+
+    
 
     stopTimer() {
       this.setState({isOn: false})
