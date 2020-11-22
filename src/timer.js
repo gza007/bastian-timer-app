@@ -7,6 +7,7 @@ class Timer extends React.Component {
         minutes: 0,
         seconds: 0,
         rounds: 0,
+        roundsLeft: 0,
         isOn: false,
         startTime: 0,
         overallTime: 0,
@@ -24,7 +25,6 @@ class Timer extends React.Component {
         startTime: Date.now()
       })
       this.timer = setInterval(() => this.run(), 1);
-      console.log(this.state.rounds)
     }
   }
 
@@ -34,9 +34,15 @@ class Timer extends React.Component {
         overallTime: milliseconds
       })
     }
-    
 
-    run() {
+      // if (remaining === 0) {
+      //   this.setState = (() => ({
+      //     roundsLeft: this.state.rounds - 1
+      //   }));  
+      //   console.log("if 1", this.state.roundsLeft)
+      // }    
+    
+    run() {    
       const diff = Date.now() - this.state.startTime;
       this.convert();
       let remaining = this.state.overallTime - diff;
@@ -51,21 +57,25 @@ class Timer extends React.Component {
       }
     }
 
-
-    
-
     stopTimer() {
-      this.setState({isOn: false})
+      this.setState({
+        isOn: false
+      })
       clearInterval(this.timer)
     }
+
     resetTimer() {
-      this.setState({timeLeft: this.state.overallTime, isOn: false})
+      this.setState({
+        timeLeft: this.state.overallTime, 
+        isOn: false
+      })
       clearInterval(this.timer)
     }
 
     inputHandler = (event) => {
-      this.setState({[event.target.name]: event.target.value});
-      console.log('handlesubmit', this.state.minutes, this.state.seconds)
+      this.setState({
+        [event.target.name]: event.target.value
+      });
     }
   
     
