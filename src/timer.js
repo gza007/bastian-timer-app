@@ -61,7 +61,7 @@ class Timer extends React.Component {
       }));
       // if (remaining === 0 && this.state.rounds > 0) {
       //   clearInterval(this.timer)
-      // }
+      // }  
       // // this.setState(() => ({
       //   timeLeft: restRemaining, 
       // }));
