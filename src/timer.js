@@ -7,6 +7,7 @@ class Timer extends React.Component {
         minutes: 0,
         seconds: 0,
         rounds: 0,
+        counter: 0,
         roundsLeft: 0,
         isOn: false,
         startTime: 0,
@@ -14,21 +15,26 @@ class Timer extends React.Component {
         timeLeft: 0,
       }
       this.startTimer = this.startTimer.bind(this)
+      this.resumeTimer = this.resumeTimer.bind(this)
       this.stopTimer = this.stopTimer.bind(this)
       this.resetTimer = this.resetTimer.bind(this)
     }
     
-    startTimer() {
+    startTimer = () => {
+      // for (let i = this.state.rounds; i <= this.state.rounds; i--) {
       if (!this.state.isOn) {
       this.setState({
         isOn: true,
-        startTime: Date.now()
+        startTime: Date.now(),
+        counter: this.state.counter + 1,
+        roundsLeft: (this.state.rounds - 1) - this.state.counter,
       })
       this.timer = setInterval(() => this.run(), 1);
     }
   }
+// }
 
-    convert() {
+    convert = () => {
       let milliseconds = this.state.minutes*60*1000 + this.state.seconds*1000;
       this.setState({
         overallTime: milliseconds
@@ -42,29 +48,43 @@ class Timer extends React.Component {
       //   console.log("if 1", this.state.roundsLeft)
       // }    
     
-    run() {    
+    run = () => {    
       const diff = Date.now() - this.state.startTime;
       this.convert();
       let remaining = this.state.overallTime - diff;
+      // let restRemaining = 5000 - diff;
       if (remaining < 0) {
         remaining = 0;
       }
       this.setState(() => ({
         timeLeft: remaining, 
       }));
-      if (remaining === 0) {
+      // if (remaining === 0 && this.state.rounds > 0) {
+      //   clearInterval(this.timer)
+      // }
+      // // this.setState(() => ({
+      //   timeLeft: restRemaining, 
+      // }));
+      if (remaining === 0 && this.state.roundsLeft === 0) {
         clearInterval(this.timer)
+        this.setState(() => ({
+          isOn: false, 
+        }));
       }
     }
 
-    stopTimer() {
+    resumeTimer = () => {
+
+    }
+
+    stopTimer = () => {
       this.setState({
         isOn: false
       })
       clearInterval(this.timer)
     }
 
-    resetTimer() {
+    resetTimer = () => {
       this.setState({
         timeLeft: this.state.overallTime, 
         isOn: false
@@ -98,7 +118,8 @@ class Timer extends React.Component {
             <h3>Rounds</h3>
             <input type="number"  placeholder="00"  name="rounds"  onChange={this.inputHandler} />
           <h2>TIME LEFT:</h2><h3>{Display()}</h3>  
-            <button onClick={this.startTimer}>start</button> 
+            <button onClick={this.startTimer}>start</button>
+            <button onClick={this.resumeTimer}>resume</button> 
             <button onClick={this.stopTimer}>stop</button>
             <button onClick={this.resetTimer}>reset</button>
         </div>
