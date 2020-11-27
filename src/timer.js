@@ -13,6 +13,7 @@ class Timer extends React.Component {
         startTime: 0,
         overallTime: 0,
         timeLeft: 0,
+        
       }
       this.startTimer = this.startTimer.bind(this)
       this.resumeTimer = this.resumeTimer.bind(this)
@@ -70,6 +71,10 @@ class Timer extends React.Component {
           isOn: false, 
         }));
       }
+    }
+
+    startRest = () => {
+      
     }
 
     resumeTimer = () => {
