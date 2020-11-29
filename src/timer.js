@@ -26,6 +26,11 @@ class Timer extends React.Component {
     
     startTimer = () => {
       if (!this.state.isOn) {
+        if (this.state.roundsLeft < 0) {
+          this.setState({
+            roundsLeft: 0,
+          })
+        }
         this.setState({
           isOn: true,
           startTime: Date.now(),
@@ -56,7 +61,7 @@ class Timer extends React.Component {
       this.setState(() => ({
         timeLeft: remaining, 
       }));
-      if (remaining === 0 && this.state.counter <= this.state.rounds) {
+      if (remaining === 0 && this.state.roundsLeft > 0) {
         clearInterval(this.timer)
         this.setState(() => ({
           isOn: false,
@@ -64,7 +69,7 @@ class Timer extends React.Component {
         this.startRest();
         // this.startTimer();
       }
-      if (remaining === 0 && this.state.counter > this.state.rounds) {
+      if (remaining === 0 && this.state.roundsLeft === 0) {
         clearInterval(this.timer)
         this.setState(() => ({
           isOn: false, 
@@ -73,15 +78,28 @@ class Timer extends React.Component {
     }
 
     startRest = () => {
+      if (this.state.restTime === 0) {
+        // clearInterval(this.resttimer)
+        clearInterval(this.timer)
+        this.setState(() => ({
+          isOn: false, 
+        }));
+      this.startTimer();
+      }
+      else {
       this.setState(() => ({
         restStartTime: Date.now(), 
+        isOn: true,
       }));
       this.restTimer = setInterval(() => {
       const difference = Date.now() - this.state.restStartTime;
       this.convert();
       let remaining = this.state.restTime - difference;
+      if (remaining < 0) {
+        remaining = 0;
+      }
       if (remaining === 0) {
-        clearInterval(this.resttimer)
+        clearInterval(this.restTimer)
         this.setState(() => ({
           isOn: false, 
         }));
@@ -89,8 +107,9 @@ class Timer extends React.Component {
       }
       this.setState(() => ({
         timeLeft: remaining, 
-      }));
-      }, 1);
+          }));
+        }, 1);
+      } 
     }
 
     resumeTimer = () => {
@@ -102,6 +121,7 @@ class Timer extends React.Component {
         isOn: false
       })
       clearInterval(this.timer)
+      clearInterval(this.restTimer)
     }
 
     resetTimer = () => {
