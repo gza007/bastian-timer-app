@@ -4,49 +4,61 @@ class Timer extends React.Component {
     constructor(props){
       super(props)
       this.state = {
+        isOn: false,
+        isPaused: false,
         minutes: 0,
         seconds: 0,
         rounds: 0,
         rest: 0,
         counter: 0,
         roundsLeft: 0,
-        isOn: false,
         restStartTime: 0,
-        startTime: 0,
-        overallTime: 0,
-        timeLeft: 0,
+        workStartTime: 0,
+        workTime: 0,
         restTime: 0,
+        timeLeft: 0,
       }
 
       this.startTimer = this.startTimer.bind(this)
       this.stopTimer = this.stopTimer.bind(this)
+      this.pauseTimer = this.pauseTimer.bind(this)
       this.resetTimer = this.resetTimer.bind(this)
       this.display = this.display.bind(this)
     }
     
     startTimer = () => {
-      if (!this.state.isOn) {
+
+      if (this.state.isPaused) {
+        this.setState({
+          isPaused: false,
+          isOn: true,
+        })
+        this.timer = setInterval(() => this.run(), 1);
+      }
+
+      else if (!this.state.isOn) {
+        
         if (this.state.roundsLeft < 0) {
             this.setState({
               roundsLeft: 0,
             })
-          }
-          if (this.state.rest === 0) {
+        }
+        if (this.state.rest === 0) {
                this.setState({
                 isOn: true,
-                startTime: Date.now(),
+                workStartTime: Date.now(),
                 counter: this.state.counter + 1, 
                 roundsLeft: this.state.rounds - (this.state.counter),
               }) 
-            }
-           if (this.state.rest > 0) {
+        }
+        if (this.state.rest > 0) {
                 this.setState({
                 isOn: true,
-                startTime: Date.now(),
+                workStartTime: Date.now(),
                 counter: this.state.counter + 1, 
                 roundsLeft: this.state.rounds - (this.state.counter + 1),
               })
-           }
+          }
           if (this.state.counter > this.state.rounds) {
                 this.setState({
               counter: this.state.rounds,
@@ -61,15 +73,15 @@ class Timer extends React.Component {
       let startMilliseconds = this.state.minutes*60*1000 + this.state.seconds*1000;
       let restMilliseconds = this.state.rest*1000;
       this.setState({
-        overallTime: startMilliseconds,
+        workTime: startMilliseconds,
         restTime: restMilliseconds,
       })
     }
 
     run = () => {    
-      const diff = Date.now() - this.state.startTime;
+      const diff = Date.now() - this.state.workStartTime;
       this.convert();
-      let remaining = this.state.overallTime - diff;
+      let remaining = this.state.workTime - diff;
       if (remaining < 0) {
         remaining = 0;
       }
@@ -122,6 +134,16 @@ class Timer extends React.Component {
       } 
     }
 
+    pauseTimer = () => {
+      clearInterval(this.restTimer)
+      clearInterval(this.timer)
+      this.setState(() => ({
+        isOn: false,
+        isPaused: true,
+        // workTime: Date.now() - this.state.workStartTime,
+          }));
+    }
+
     stopTimer = () => {
       this.setState({
         isOn: false,
@@ -133,7 +155,7 @@ class Timer extends React.Component {
 
     resetTimer = () => {
       this.setState({
-        timeLeft: this.state.overallTime, 
+        timeLeft: this.state.workTime, 
         isOn: false,
         counter: 0,
       })
@@ -170,7 +192,7 @@ class Timer extends React.Component {
         <h2>Round {this.state.counter} of {this.state.rounds}</h2>
           <h3>{this.display()}</h3>
             <button onClick={this.startTimer}>start</button>
-            <button onClick={this.startTimer}>resume</button> 
+            <button onClick={this.pauseTimer}>pause</button> 
             <button onClick={this.stopTimer}>stop</button>
             <button onClick={this.resetTimer}>reset</button>
         </div>
